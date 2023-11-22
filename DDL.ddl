@@ -1,3 +1,13 @@
+-- Comando sqls para doprar as tabelas para executar este cÃ³digo
+
+DROP TABELE tb_ic_address CASCADE CONSTRAINTS;
+DROP TABELE tb_ic_analysis CASCADE CONSTRAINTS;
+DROP TABELE tb_ic_child CASCADE CONSTRAINTS;
+DROP TABELE tb_ic_exam CASCADE CONSTRAINTS;
+DROP TABELE tb_ic_phone CASCADE CONSTRAINTS;
+DROP TABELE tb_ic_user CASCADE CONSTRAINTS;
+
+
 -- Gerado por Oracle SQL Developer Data Modeler 22.2.0.165.1149
 --   em:        2023-11-22 02:16:52 BRT
 --   site:      Oracle Database 11g
@@ -116,7 +126,7 @@ ALTER TABLE tb_ic_phone
 
 
 
--- Relatório do Resumo do Oracle SQL Developer Data Modeler: 
+-- Relatï¿½rio do Resumo do Oracle SQL Developer Data Modeler: 
 -- 
 -- CREATE TABLE                             6
 -- CREATE INDEX                             1
