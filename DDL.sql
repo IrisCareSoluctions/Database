@@ -124,7 +124,15 @@ ALTER TABLE tb_ic_phone
     ADD CONSTRAINT tb_ic_phone_tb_ic_user_fk FOREIGN KEY ( id_user )
         REFERENCES tb_ic_user ( id_user );
 
+CREATE TABLE tb_ic_erros (
+    id_erro     NUMBER NOT NULL,
+    nm_user     VARCHAR2(150) NOT NULL,
+    date        DATE NOT NULL,
+    cd_error    VARCHAR2(100) NOT NULL,
+    message     VARCHAR2(300) NOT NULL
+);
 
+ALTER TABLE tb_ic_erros ADD CONSTRAINT tb_ic_erros_pk PRIMARY KEY ( id_erro );
 
 -- Relat�rio do Resumo do Oracle SQL Developer Data Modeler: 
 -- 
