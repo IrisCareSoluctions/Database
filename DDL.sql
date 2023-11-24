@@ -94,7 +94,7 @@ CREATE TABLE tb_ic_user (
     email    VARCHAR2(150) NOT NULL,
     password VARCHAR2(100) NOT NULL,
     birthday DATE NOT NULL,
-    cpf      VARCHAR2(10) NOT NULL,
+    cpf      VARCHAR2(15) NOT NULL,
     status   VARCHAR2(10) NOT NULL
 );
 
