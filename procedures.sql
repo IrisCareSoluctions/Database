@@ -1,71 +1,67 @@
+-- Procudere pra retornar as crianças cadastradas pelo usario, passando como parâmetro o id dele e sendo exibida apenas as crianças com status ativo
 
--- Procedure para ralizar o inserção de um usuário
+CREATE OR REPLACE PROCEDURE prc_consulta_crianca
+    (p_id_user IN tb_ic_user.id_user%TYPE) IS
+    CURSOR c_criancas IS
+        SELECT c.id_child, c.name_child, c.cpf, c.birthday, c.active
+        FROM tb_ic_child c
+        INNER JOIN tb_ic_user u ON c.id_user = u.id_user
+        WHERE c.id_user = p_id_user;
 
-create or replace procedure prc_ic_cadastra_usuario(
-    name in varchar2,
-    email in varchar2,
-    password in varchar2,
-    birthday in date,
-    cpf in varchar2
-) as
-    v_cpf_formatado VARCHAR2(11);
-    v_codigo_erro NUMBER;
-    v_mensagem_erro VARCHAR2(250);
-begin
+    v_id_child tb_ic_child.id_child%TYPE;
+    v_name_child tb_ic_child.name_child%TYPE;
+    v_cpf tb_ic_child.cpf%TYPE;
+    v_birthday tb_ic_child.birthday%TYPE;
+    v_active tb_ic_child.active%TYPE;
 
-    v_cpf_formatado := REPLACE(REPLACE(cpf, '.', ''), '-', '');
+BEGIN
+    OPEN c_criancas;
+
+    LOOP
+        FETCH c_criancas INTO v_id_child, v_name_child, v_cpf, v_birthday, v_active;
+
+        EXIT WHEN c_criancas%NOTFOUND;
+
+        IF v_active = 'ATIVO' THEN
+
+            DBMS_OUTPUT.PUT_LINE('ID: ' || v_id_child || ', Nome: ' || v_name_child || ', CPF: ' || v_cpf || ', Data de Nascimento: ' || TO_CHAR(v_birthday, 'DD/MM/YYYY') || ', Status: ' || v_active);
     
-    IF LENGTH(v_cpf_formatado) <> 11 THEN
-        RAISE_APPLICATION_ERROR(-20002, 'CPF deve ter 11 dígitos.');
-    END IF;
-    
-    IF INSTR(email, '@') = 0 THEN
-        RAISE_APPLICATION_ERROR(-20002, 'Não foi encontrado o caracter @ no email');
-    END IF;
+        END IF;
+    END LOOP;
 
-    INSERT INTO TB_IC_USER (ID_USER, NAME, EMAIL, PASSWORD, BIRTHDAY, CPF, STATUS)
-    VALUES(seq_tb_ic_user.NEXTVAL, name, email, password, birthday, cpf, 'ATIVO');
-  
-exception
-    WHEN DUP_VAL_ON_INDEX THEN
-        DBMS_OUTPUT.PUT_LINE('Erro: Valor duplicado em coluna unica.');
+    CLOSE c_criancas;
 
-        v_codigo_erro := SQLCODE;
-        v_mensagem_erro := SQLERRM;
-        
-        INSERT INTO TB_IC_ERROS (id_erro, nm_user, date_error, cd_error, message_error)
-        VALUES (seq_tb_ic_erros.NEXTVAL, USER, SYSDATE, v_codigo_erro, v_mensagem_erro);
-        
-    WHEN VALUE_ERROR THEN
-        DBMS_OUTPUT.PUT_LINE('Erro: Violou a restricao de tamanho.');
+END prc_consulta_crianca;
+/
 
-        v_codigo_erro := SQLCODE;
-        v_mensagem_erro := SQLERRM;
-        
-        INSERT INTO TB_AS_ERRO (ID_ERRO, CD_ERRO, NM_ERRO, DT_REGISTRO, USUARIO, PROCEDIMENTO)
-        VALUES (seq_id_erro.NEXTVAL, v_codigo_erro, v_mensagem_erro, SYSDATE, USER, 'PRC_CADASTRO_USUARIO');
-
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Ocorreu um erro: ' || SQLERRM);
-
-        v_codigo_erro := SQLCODE;
-        v_mensagem_erro := SQLERRM;
-        
-        INSERT INTO TB_IC_ERROS (id_erro, nm_user, date_error, cd_error, message_error)
-        VALUES (seq_tb_ic_erros.NEXTVAL, USER, SYSDATE, v_codigo_erro, v_mensagem_erro);
-  
-end prc_ic_cadastra_usuario;
+exec prc_consulta_crianca(6);
 
 
--- Procedure para ralizar o inserção de um usuário
+-- A procedure printa a frequencia que a criança deve fazer a analise de acordo com a idade dela
 
-create or replace procedure prc_ic_cadastra_telefone() as
-begin
+CREATE OR REPLACE PROCEDURE prc_ic_verificar_analise_criancas
+    (p_id_child IN tb_ic_child.id_child%TYPE) IS
+   v_name_child tb_ic_child.name_child%TYPE;
+   v_birthday tb_ic_child.birthday%TYPE;
+   v_idade_meses NUMBER;
 
-  DBMS_OUTPUT.PUT_LINE('Criou');
-  
-end;
+BEGIN
+   SELECT name_child, birthday INTO v_name_child, v_birthday
+   FROM tb_ic_child
+   WHERE id_child = p_id_child;
 
--- Realização das inserções
+   v_idade_meses := TRUNC(MONTHS_BETWEEN(SYSDATE, v_birthday));
 
-exec prc_ic_cadastra_usuario('Vinicius de Oliveira', 'vini@gmail.com', '123', to_date('01/05/2003', 'dd/mm/yyyy'), '52467645184');
+   IF v_idade_meses < 12 THEN
+      DBMS_OUTPUT.PUT_LINE('A criança ' || v_name_child || ' deve fazer a análise uma vez por semana.');
+   ELSIF v_idade_meses >= 12 AND v_idade_meses <= 60 THEN
+      DBMS_OUTPUT.PUT_LINE('A criança ' || v_name_child || ' deve fazer a análise uma vez por mês.');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('A criança ' || v_name_child || ' deve fazer a análise a cada 3 meses.');
+   END IF;
+
+END prc_ic_verificar_analise_criancas;
+/
+
+
+exec prc_ic_verificar_analise_criancas(10);

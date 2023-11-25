@@ -1,11 +1,12 @@
 -- Comando sqls para doprar as tabelas para executar este código
 
-DROP TABELE tb_ic_address CASCADE CONSTRAINTS;
-DROP TABELE tb_ic_analysis CASCADE CONSTRAINTS;
-DROP TABELE tb_ic_child CASCADE CONSTRAINTS;
-DROP TABELE tb_ic_exam CASCADE CONSTRAINTS;
-DROP TABELE tb_ic_phone CASCADE CONSTRAINTS;
-DROP TABELE tb_ic_user CASCADE CONSTRAINTS;
+DROP TABLE tb_ic_address CASCADE CONSTRAINTS;
+DROP TABLE tb_ic_analysis CASCADE CONSTRAINTS;
+DROP TABLE tb_ic_child CASCADE CONSTRAINTS;
+DROP TABLE tb_ic_exam CASCADE CONSTRAINTS;
+DROP TABLE tb_ic_phone CASCADE CONSTRAINTS;
+DROP TABLE tb_ic_user CASCADE CONSTRAINTS;
+DROP TABLE tb_ic_erros CASCADE CONSTRAINTS;
 
 
 -- Gerado por Oracle SQL Developer Data Modeler 22.2.0.165.1149
@@ -23,7 +24,7 @@ CREATE TABLE tb_ic_address (
     id_address   NUMBER NOT NULL,
     id_user      NUMBER NOT NULL,
     zip_code     VARCHAR2(15) NOT NULL,
-    "number"     VARCHAR2(10) NOT NULL,
+    number_address     VARCHAR2(10) NOT NULL,
     street       VARCHAR2(200) NOT NULL,
     city         VARCHAR2(150) NOT NULL,
     state        VARCHAR2(150) NOT NULL,
@@ -42,7 +43,7 @@ CREATE TABLE tb_ic_analysis (
     id_child      NUMBER NOT NULL,
     id_user       NUMBER NOT NULL,
     image         VARCHAR2(250) NOT NULL,
-    "date"        DATE NOT NULL,
+    dt_analysis        DATE NOT NULL,
     ds_leucocoria VARCHAR2(200) NOT NULL
 );
 
@@ -54,8 +55,8 @@ ALTER TABLE tb_ic_analysis
 CREATE TABLE tb_ic_child (
     id_child NUMBER NOT NULL,
     id_user  NUMBER NOT NULL,
-    name     VARCHAR2(150) NOT NULL,
-    cpf      VARCHAR2(10) NOT NULL,
+    name_child     VARCHAR2(150) NOT NULL,
+    cpf      VARCHAR2(15) NOT NULL,
     birthday DATE NOT NULL,
     active   VARCHAR2(10) NOT NULL
 );
@@ -67,8 +68,8 @@ CREATE TABLE tb_ic_exam (
     id_exame    NUMBER NOT NULL,
     id_child    NUMBER NOT NULL,
     id_user     NUMBER NOT NULL,
-    name        VARCHAR2(150) NOT NULL,
-    "date"      DATE NOT NULL,
+    name_exam        VARCHAR2(150) NOT NULL,
+    dt_exam      DATE NOT NULL,
     description VARCHAR2(300) NOT NULL,
     image       VARCHAR2(200)
 );
@@ -82,7 +83,7 @@ CREATE TABLE tb_ic_phone (
     id_phone NUMBER NOT NULL,
     id_user  NUMBER NOT NULL,
     ddd      VARCHAR2(5) NOT NULL,
-    "number" VARCHAR2(12) NOT NULL
+    number_phone VARCHAR2(12) NOT NULL
 );
 
 ALTER TABLE tb_ic_phone ADD CONSTRAINT tb_ic_phone_pk PRIMARY KEY ( id_phone,
@@ -90,7 +91,7 @@ ALTER TABLE tb_ic_phone ADD CONSTRAINT tb_ic_phone_pk PRIMARY KEY ( id_phone,
 
 CREATE TABLE tb_ic_user (
     id_user  NUMBER NOT NULL,
-    name     VARCHAR2(150) NOT NULL,
+    name_user     VARCHAR2(150) NOT NULL,
     email    VARCHAR2(150) NOT NULL,
     password VARCHAR2(100) NOT NULL,
     birthday DATE NOT NULL,
@@ -127,7 +128,7 @@ ALTER TABLE tb_ic_phone
 CREATE TABLE tb_ic_erros (
     id_erro     NUMBER NOT NULL,
     nm_user     VARCHAR2(150) NOT NULL,
-    date        DATE NOT NULL,
+    date_error        DATE NOT NULL,
     cd_error    VARCHAR2(100) NOT NULL,
     message     VARCHAR2(300) NOT NULL
 );
